@@ -28,14 +28,10 @@
 
   function bom(blob, opts) {
     if (typeof opts === 'undefined') opts = {
-      autoBom: false
-    };else if (typeof opts !== 'object') {
-      console.warn('Depricated: Expected third argument to be a object');
-      opts = {
-        autoBom: !opts
-      };
-    } // prepend BOM for UTF-8 XML and text/* types (including HTML)
-    // note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+      autoBom: false // prepend BOM for UTF-8 XML and text/* types (including HTML)
+      // note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+
+    };
 
     if (opts.autoBom && /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
       return new Blob([String.fromCharCode(0xFEFF), blob], {
@@ -81,7 +77,7 @@
     }
   }
 
-  var saveAs = _global.saveAs || // probably in some web worker
+  var saveAs = _global.saveAs || ( // probably in some web worker
   typeof window !== 'object' || window !== _global ? function saveAs() {}
   /* noop */
   // Use download attribute first if possible (#193 Lumia mobile)
@@ -92,7 +88,8 @@
     a.download = name;
     a.rel = 'noopener'; // tabnabbing
     // TODO: detect chrome extensions & packaged apps
-    // a.target = '_blank'
+
+    a.target = '_blank';
 
     if (typeof blob === 'string') {
       // Support regular links
@@ -171,7 +168,7 @@
         URL.revokeObjectURL(url);
       }, 4E4); // 40s
     }
-  };
+  });
   _global.saveAs = saveAs.saveAs = saveAs;
 
   if (typeof module !== 'undefined') {

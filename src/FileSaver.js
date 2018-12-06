@@ -19,10 +19,6 @@ var _global = typeof window === 'object' && window.window === window
 
 function bom (blob, opts) {
   if (typeof opts === 'undefined') opts = { autoBom: false }
-  else if (typeof opts !== 'object') {
-    console.warn('Depricated: Expected third argument to be a object')
-    opts = { autoBom: !opts }
-  }
 
   // prepend BOM for UTF-8 XML and text/* types (including HTML)
   // note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
@@ -65,9 +61,9 @@ function click(node) {
   }
 }
 
-var saveAs = _global.saveAs ||
+var saveAs = _global.saveAs || (
 // probably in some web worker
-(typeof window !== 'object' || window !== _global)
+typeof window !== 'object' || window !== _global
   ? function saveAs () { /* noop */ }
 
 // Use download attribute first if possible (#193 Lumia mobile)
@@ -81,7 +77,7 @@ var saveAs = _global.saveAs ||
   a.rel = 'noopener' // tabnabbing
 
   // TODO: detect chrome extensions & packaged apps
-  // a.target = '_blank'
+  a.target = '_blank'
 
   if (typeof blob === 'string') {
     // Support regular links
@@ -155,7 +151,7 @@ var saveAs = _global.saveAs ||
     popup = null // reverse-tabnabbing #460
     setTimeout(function () { URL.revokeObjectURL(url) }, 4E4) // 40s
   }
-}
+})
 
 _global.saveAs = saveAs.saveAs = saveAs
 
